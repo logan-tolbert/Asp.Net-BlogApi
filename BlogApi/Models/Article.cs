@@ -6,7 +6,7 @@ namespace BlogApi.Models
     public class Article
     {
         [Key]
-        [Column("id", TypeName = "int")]
+        [Column("id", TypeName = "integer")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 

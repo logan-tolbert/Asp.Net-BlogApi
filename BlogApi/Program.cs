@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<BlogDbContext>(options =>
-    options.UseSqlite("Data Source=blog.db"));
+    options.UseSqlite("Data Source=Data/blog.db"));
 
 var app = builder.Build();
 
