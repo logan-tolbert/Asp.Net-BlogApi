@@ -1,4 +1,4 @@
-﻿using BlogApi.Models;
+﻿using BlogApi.DataAccess.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogApi.Controllers

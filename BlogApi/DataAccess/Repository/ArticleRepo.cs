@@ -1,6 +1,6 @@
-﻿using BlogApi.Models;
+﻿using BlogApi.DataAccess.Entities;
 
-namespace BlogApi.Repository
+namespace BlogApi.DataAccess.Repository
 {
     public class ArticleRepo : IArticleRepo
     {

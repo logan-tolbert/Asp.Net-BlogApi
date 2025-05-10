@@ -1,7 +1,7 @@
-﻿using BlogApi.Models;
+﻿using BlogApi.DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlogApi.Migrations;
+namespace BlogApi.DataAccess;
 
 public class BlogDbContext : DbContext
 {

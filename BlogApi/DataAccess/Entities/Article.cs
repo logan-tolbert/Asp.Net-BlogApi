@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BlogApi.Models
+namespace BlogApi.DataAccess.Entities
 {
     public class Article
     {
