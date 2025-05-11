@@ -1,33 +1,50 @@
 ﻿using BlogApi.DataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace BlogApi.DataAccess.Repository
+namespace BlogApi.DataAccess.Repository;
+
+public class ArticleRepo : IArticleRepo
 {
-    public class ArticleRepo : IArticleRepo
+    private readonly BlogDbContext _db;
+
+    public ArticleRepo(BlogDbContext db)
     {
-     
-        public Task<Article> CreateAsync(Article article)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public Task<Article?> GetByIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+        _db = db;
+    }
 
-        public Task<IEnumerable<Article>> GetAllAsync()
-        {
-            throw new NotImplementedException();
-        }
+    public async Task<Article> CreateAsync(Article article)
+    {
+        _db.Articles.Add(article);
+        await _db.SaveChangesAsync();
+        return article;
+    }
 
-        public Task UpdateAsync(Article article)
-        {
-            throw new NotImplementedException();
-        }
+    public async Task<Article?> GetByIdAsync(int id)
+    {
+        return await _db.Articles.SingleOrDefaultAsync(a => a.Id == id);
+    }
 
-        public Task DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
+    public async Task<IEnumerable<Article>> GetAllAsync()
+    {
+        var articles = await _db.Articles.ToListAsync();
+        return articles;
+    }
+
+    public async Task UpdateAsync(Article article)
+    {
+        _db.Articles.Update(article);
+        await _db.SaveChangesAsync();
+    }
+
+
+    public async Task<bool> DeleteAsync(int id)   
+    {
+        var article = await _db.Articles.SingleOrDefaultAsync(a => a.Id == id);
+
+        //TODO: Handle possible null reference
+        _db.Articles.Remove(article!);
+        var deletions = await _db.SaveChangesAsync(true);
+
+        return deletions > 0;
     }
 }

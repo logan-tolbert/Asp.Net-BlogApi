@@ -4,10 +4,10 @@ namespace BlogApi.DataAccess.Repository
 {
     public interface IArticleRepo
     {
-        Task<IEnumerable<Article>> GetAllAsync();
-        Task<Article?> GetByIdAsync(int id);
         Task<Article> CreateAsync(Article article);
+        Task<Article?> GetByIdAsync(int id);
+        Task<IEnumerable<Article>> GetAllAsync();
         Task UpdateAsync(Article article);
-        Task DeleteAsync(int id);
+        Task<bool> DeleteAsync(int id);
     }
 }

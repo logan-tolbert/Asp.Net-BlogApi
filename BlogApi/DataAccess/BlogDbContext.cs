@@ -7,7 +7,7 @@ public class BlogDbContext : DbContext
 {
     public BlogDbContext(DbContextOptions<BlogDbContext> options) : base(options) { }
 
-    DbSet<Article> Articles { get; set; }
+    public DbSet<Article> Articles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
