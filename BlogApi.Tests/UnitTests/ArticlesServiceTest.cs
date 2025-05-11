@@ -8,6 +8,7 @@ namespace BlogApi.Tests.UnitTests;
 
 public class ArticleServiceTests
 {
+    // TODO: Testing - Reduce code duplication. Cleaner more efficient test data genearation
     private readonly IArticleService _service;
     private readonly Mock<IArticleRepo> _mock;
     private readonly IArticleRepo _mockRepo;
@@ -60,29 +61,76 @@ public class ArticleServiceTests
         Assert.Equal(createdArticle.Tags, result.Tags);
     }
 
-    //[Fact]
-    //public async Task CreateArticleAsync_ReturnsArgumentNullException_WithNullCreateRequest()
-    //{
-    //    // Arrange
 
-    //    // Act 
+    // TODO: public async Task CreateArticleAsync_ReturnsArgumentNullException_WithNullCreateRequest()
 
-    //    // Assert
-    //}
+    // TODO: public async Task CreateArticleAsync_ReturnsArgumentException_IfTitleIsNull()
 
-    //[Fact]
-    //public async Task CreateArticleAsync_ReturnsArgumentException_IfTitleIsNull()
-    //{
-    //    // Arrange
-
-    //    // Act 
-
-    //    // Assert
-    //}
 
     // *-- Read --*
+    [Fact]
+    public async Task GetArticleByIdAsync_ReturnsCorrectArticleResponse_WithValidRequest()
+    {
+        // Arrange
+        var response = new Article
+        {
+            Id = 1,
+            Title = "Introduction to C#",
+            Content = "This article covers the basics of C# programming language.",
+            Author = "Logan Tolbert",
+            Tags = "C#,Programming,Basics",
+            CreatedAt = new DateTime(2025, 5, 9, 0, 0, 0, DateTimeKind.Utc),
+            UpdatedAt = new DateTime(2025, 5, 9, 0, 0, 0, DateTimeKind.Utc)
+        };
+
+        _mock.Setup(m => m.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(response);
+
+        // Act
+        var result = await _service.GetArticleByIdAsync(1);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(response.Id, result.Id);
+        Assert.Equal(response.Title, result.Title);
+        Assert.Equal(response.Content, result.Content);
+        Assert.Equal(response.Author, result.Author);
+        Assert.Equal(response.Tags, result.Tags);
+    }
 
     // *-- Update --*
+    [Fact]
+    public async Task UpdateArticleAsync_ReturnsTrue_WithSuccessfulUpdate()
+    {
+        // Arrange
+        var updateRequest = new ArticleUpdateRequest
+        {
+            Title = "Intro to C#",
+            Content = "This article covers the basics of C# programming language.",
+            Author = "Logan Tolbert",
+            Tags = "C#,Programming,Basics",
+            UpdatedAt = new DateTime(2025, 5, 9, 2, 0, 0, DateTimeKind.Utc)
+        };
+
+        _mock.Setup(m => m.UpdateAsync(It.IsAny<int>(), It.IsAny<Article>()))
+         .ReturnsAsync(true);
+
+        // Act
+        var result = await _service.UpdateArticleAsync(1, updateRequest);
+
+        Assert.True(result);
+    }
 
     // *-- Delete --*
+    [Fact]
+    public async Task DeleteArticleAsync_ReturnsTrue_WithSuccessfulDeletion()
+    {
+        _mock.Setup(m => m.DeleteAsync(It.IsAny<int>()))
+            .ReturnsAsync(true);
+
+        // Act
+        var result = await _service.DeleteArticleAsync(1);
+
+        Assert.True(result);
+    }
 }

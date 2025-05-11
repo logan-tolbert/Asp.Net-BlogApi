@@ -30,11 +30,20 @@ public class ArticleRepo : IArticleRepo
         return articles;
     }
 
-    public async Task<bool> UpdateAsync(Article article)
+    public async Task<bool> UpdateAsync(int id, Article updatedArticle)
     {
-        // TODO: Check if article exists before Updating
-        //       - ?? change return type ??
-        _db.Articles.Update(article);
+        var existingArticle = await _db.Articles.FindAsync(id);
+        if (existingArticle == null)
+        {
+            return false;
+        }
+
+        existingArticle.Title = updatedArticle.Title;
+        existingArticle.Content = updatedArticle.Content;
+        existingArticle.Author = updatedArticle.Author;
+        existingArticle.Tags = updatedArticle.Tags;
+        existingArticle.UpdatedAt = updatedArticle.UpdatedAt;
+
         var rowsAffected = await _db.SaveChangesAsync();
         return rowsAffected > 0;
     }

@@ -96,7 +96,7 @@ public class IT_ArticleRepoTest
         };
 
         // Act 
-        var result = await repo.UpdateAsync(update); 
+        var result = await repo.UpdateAsync(1, update); 
 
         // Assert 
         Assert.True(result);
