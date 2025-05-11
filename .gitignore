@@ -363,3 +363,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/BlogApi/DataAccess/Data/blog.db-shm
+/BlogApi/DataAccess/Data/blog.db-wal
