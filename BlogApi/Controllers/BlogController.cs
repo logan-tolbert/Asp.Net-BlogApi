@@ -1,4 +1,5 @@
-﻿using BlogApi.DataAccess.Entities;
+﻿using BlogApi.DTOs;
+using BlogApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogApi.Controllers
@@ -7,44 +8,55 @@ namespace BlogApi.Controllers
     [ApiController]
     public class BlogController : ControllerBase
     {
+        public readonly IArticleService _service;
+        public BlogController(IArticleService service) 
+        { 
+            _service = service;
+        }
+
+        // *-- Create --* 
+        [HttpPost]
+        [Route("articles")]
+        public async Task<IActionResult> CreateArticle(ArticleCreateRequest newArticle)
+        {
+            var createdArticle = await _service.CreateArticleAsync(newArticle);
+            return Ok(createdArticle);
+        }
+
+        // *-- Read --*
         [HttpGet]
         [Route("articles")]
         public async Task<IActionResult> GetArticles()
         {
-            await Task.CompletedTask;
-            return Ok("GET: /articles Success!");
+            var articles = await _service.GetArticlesAsync();
+            return Ok(articles);
         }
 
         [HttpGet]
         [Route("articles/{id}")]
         public async Task<IActionResult> GetArticleById(int id)
         {
-            await Task.CompletedTask;
-            return Ok($"GET: /articles/{id} Success!");
+            var article = await _service.GetArticleByIdAsync(id);
+            return Ok(article);
         }
 
-        [HttpPost]
-        [Route("articles")]
-        public async Task<IActionResult> CreateArticle(Article newArticle)
-        {
-            await Task.CompletedTask;
-            return Ok("POST: /articles Success!");
-        }
 
+        // *-- Update --*
         [HttpPut]
         [Route("articles/{id}")]
-        public async Task<IActionResult> UpdateArticle(int id,[FromBody] Article updatedArticle)
+        public async Task<IActionResult> UpdateArticle(int id,[FromBody] ArticleUpdateRequest updatedArticle)
         {
-            await Task.CompletedTask;
-            return Ok($"PUT: /articles/{id} Success!");
+            var result = await _service.UpdateArticleAsync(id, updatedArticle);
+            return Ok(result);
         }
 
+        // *-- Delete --
         [HttpDelete]
         [Route("articles/{id}")]
         public async Task<IActionResult> DeleteArticle(int id)
         {
-            await Task.CompletedTask;
-            return Ok($"DELETE: /articles/{id} Success!");
+            var result = await _service.DeleteArticleAsync(id);
+            return Ok(result);
         }
     }
 }
