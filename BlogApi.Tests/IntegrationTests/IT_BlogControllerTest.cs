@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using BlogApi.Tests.TestHelpers;
 using System.Net.Http.Json;
 
 namespace BlogApi.Tests.IntegrationTests;
 
 public class IT_BlogControllerTest
-    (WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
+    (CustomWebApplicationFactory<Program> factory) : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
