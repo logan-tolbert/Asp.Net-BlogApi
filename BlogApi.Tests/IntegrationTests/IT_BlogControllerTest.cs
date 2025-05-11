@@ -3,33 +3,12 @@ using System.Net.Http.Json;
 
 namespace BlogApi.Tests.IntegrationTests;
 
-public class BlogController_IT
+public class IT_BlogControllerTest
     (WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
-    [Fact]
-    public async Task GetArticles_ReturnsOkResult()
-    {
-        // Act
-        var response = await _client.GetAsync("api/blog/articles");
-
-        // Assert
-        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
-        response.EnsureSuccessStatusCode();
-    }
-
-    [Fact]
-    public async Task GetArticlesById_ReturnsOkResult()
-    {
-        // Act
-        var response = await _client.GetAsync("api/blog/articles/1");
-
-        // Assert
-        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
-        response.EnsureSuccessStatusCode();
-    }
-
+    // *-- Create --*
     [Fact]
     public async Task CreateArticle_ReturnsOkResult()
     {
@@ -50,6 +29,30 @@ public class BlogController_IT
         response.EnsureSuccessStatusCode();
     }
 
+    // *-- Read --*
+    [Fact]
+    public async Task GetArticlesById_ReturnsOkResult()
+    {
+        // Act
+        var response = await _client.GetAsync("api/blog/articles/1");
+
+        // Assert
+        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
+        response.EnsureSuccessStatusCode();
+    }
+
+    [Fact]
+    public async Task GetArticles_ReturnsOkResult()
+    {
+        // Act
+        var response = await _client.GetAsync("api/blog/articles");
+
+        // Assert
+        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
+        response.EnsureSuccessStatusCode();
+    }
+
+    // *-- Update --
     [Fact]
     public async Task UpdateArticle_ReturnsOkResult()
     {
@@ -71,6 +74,7 @@ public class BlogController_IT
         response.EnsureSuccessStatusCode();
     }
 
+    // *-- Delete --
     [Fact]
     public async Task DeleteArticle_ReturnsOkResult()
     {
