@@ -30,10 +30,13 @@ public class ArticleRepo : IArticleRepo
         return articles;
     }
 
-    public async Task UpdateAsync(Article article)
+    public async Task<bool> UpdateAsync(Article article)
     {
+        // TODO: Check if article exists before Updating
+        //       - ?? change return type ??
         _db.Articles.Update(article);
-        await _db.SaveChangesAsync();
+        var rowsAffected = await _db.SaveChangesAsync();
+        return rowsAffected > 0;
     }
 
 
@@ -41,7 +44,8 @@ public class ArticleRepo : IArticleRepo
     {
         var article = await _db.Articles.SingleOrDefaultAsync(a => a.Id == id);
 
-        //TODO: Handle possible null reference
+        //TODO: Handle possible null reference 
+        //       - ?? change return type ??
         _db.Articles.Remove(article!);
         var deletions = await _db.SaveChangesAsync(true);
 
