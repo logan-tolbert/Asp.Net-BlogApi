@@ -17,7 +17,7 @@ namespace BlogApi.Controllers
         // *-- Create --* 
         [HttpPost]
         [Route("articles")]
-        public async Task<IActionResult> CreateArticle(ArticleCreateRequest newArticle)
+        public async Task<IActionResult> CreateAsync(ArticleCreateRequest newArticle)
         {
             var createdArticle = await _service.CreateArticleAsync(newArticle);
             return Ok(createdArticle);
@@ -26,7 +26,7 @@ namespace BlogApi.Controllers
         // *-- Read --*
         [HttpGet]
         [Route("articles")]
-        public async Task<IActionResult> GetArticles()
+        public async Task<IActionResult> GetAsync()
         {
             var articles = await _service.GetArticlesAsync();
             return Ok(articles);
@@ -34,7 +34,7 @@ namespace BlogApi.Controllers
 
         [HttpGet]
         [Route("articles/{id}")]
-        public async Task<IActionResult> GetArticleById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var article = await _service.GetArticleByIdAsync(id);
             return Ok(article);
@@ -44,7 +44,7 @@ namespace BlogApi.Controllers
         // *-- Update --*
         [HttpPut]
         [Route("articles/{id}")]
-        public async Task<IActionResult> UpdateArticle(int id,[FromBody] ArticleUpdateRequest updatedArticle)
+        public async Task<IActionResult> UpdateAsync(int id,[FromBody] ArticleUpdateRequest updatedArticle)
         {
             var result = await _service.UpdateArticleAsync(id, updatedArticle);
             return Ok(result);
@@ -53,7 +53,7 @@ namespace BlogApi.Controllers
         // *-- Delete --
         [HttpDelete]
         [Route("articles/{id}")]
-        public async Task<IActionResult> DeleteArticle(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             var result = await _service.DeleteArticleAsync(id);
             return Ok(result);
