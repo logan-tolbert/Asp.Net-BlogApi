@@ -13,7 +13,9 @@ public class BlogDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlite("Data Source=data/blog.db");
+            var basePath = AppContext.BaseDirectory;
+            var dbPath = Path.Combine(basePath, "Data", "blog.db");
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
