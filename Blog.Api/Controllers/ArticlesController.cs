@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlogApi.Controllers;
 
-[Route("api/[controller]/articles")]
+[Route("api/v0/[controller]")]
 [ApiController]
-public class BlogController : ControllerBase
+public class ArticlesController : ControllerBase
 {
     public readonly IArticleService _service;
-    public BlogController(IArticleService service)
+    public ArticlesController(IArticleService service)
     {
         _service = service;
     }
