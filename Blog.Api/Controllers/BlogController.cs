@@ -17,7 +17,7 @@ namespace BlogApi.Controllers
         // *-- Create --* 
         [HttpPost]
         [Route("articles")]
-        public async Task<IActionResult> CreateAsync(ArticleCreateRequest newArticle)
+        public async Task<IActionResult> CreateAsync([FromBody] ArticleCreateRequest newArticle)
         {
             var createdArticle = await _service.CreateArticleAsync(newArticle);
             return Ok(createdArticle);
