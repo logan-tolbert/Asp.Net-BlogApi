@@ -3,14 +3,14 @@ using System.Net.Http.Json;
 
 namespace BlogApi.Tests.IntegrationTests;
 
-public class IT_BlogControllerTest
+public class IT_BlogControllerTests
     (CustomWebApplicationFactory<Program> factory) : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
     // *-- Create --*
     [Fact]
-    public async Task CreateArticle_ReturnsOkResult()
+    public async Task CreateAsync_ReturnsOkResult()
     {
         // Arrange
         var newArticle = new
@@ -31,7 +31,7 @@ public class IT_BlogControllerTest
 
     // *-- Read --*
     [Fact]
-    public async Task GetArticlesById_ReturnsOkResult()
+    public async Task GetByIdAsync_ReturnsOkResult()
     {
         // Act
         var response = await _client.GetAsync("api/blog/articles/1");
@@ -42,7 +42,7 @@ public class IT_BlogControllerTest
     }
 
     [Fact]
-    public async Task GetArticles_ReturnsOkResult()
+    public async Task GetAsync_ReturnsOkResult()
     {
         // Act
         var response = await _client.GetAsync("api/blog/articles");
@@ -54,7 +54,7 @@ public class IT_BlogControllerTest
 
     // *-- Update --
     [Fact]
-    public async Task UpdateArticle_ReturnsOkResult()
+    public async Task UpdateAsync_ReturnsOkResult()
     {
         // Arrange
         var updatedArticle = new
@@ -76,7 +76,7 @@ public class IT_BlogControllerTest
 
     // *-- Delete --
     [Fact]
-    public async Task DeleteArticle_ReturnsOkResult()
+    public async Task DeleteAsync_ReturnsOkResult()
     {
         // Arrange
         var id = 1;
