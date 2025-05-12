@@ -3,6 +3,7 @@ using DataAccess.Repository;
 using BlogApi.DTOs;
 using BlogApi.Services;
 using Moq;
+using Blog.Api.Services;
 
 namespace BlogApi.Tests.UnitTests;
 

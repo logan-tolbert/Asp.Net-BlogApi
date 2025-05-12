@@ -1,6 +1,6 @@
 ﻿using DataAccess.Entities;
 
-namespace BlogApi.DTOs;
+namespace Blog.Api.DTOs;
 
 public class ArticleUpdateRequest
 {

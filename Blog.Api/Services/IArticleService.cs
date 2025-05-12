@@ -1,6 +1,6 @@
-﻿using BlogApi.DTOs;
+﻿using Blog.Api.DTOs;
 
-namespace BlogApi.Services;
+namespace Blog.Api.Services;
 
 public interface IArticleService
 {

@@ -1,8 +1,8 @@
-﻿using BlogApi.DTOs;
-using BlogApi.Services;
+﻿using Blog.Api.DTOs;
+using Blog.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlogApi.Controllers;
+namespace Blog.Api.Controllers;
 
 [Route("api/v0/[controller]")]
 [ApiController]

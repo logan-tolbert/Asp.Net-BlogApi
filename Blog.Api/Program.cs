@@ -1,7 +1,7 @@
 using DataAccess;
 using DataAccess.Repository;
-using BlogApi.Services;
 using Microsoft.EntityFrameworkCore;
+using Blog.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
