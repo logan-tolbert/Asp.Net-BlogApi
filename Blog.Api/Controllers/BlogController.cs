@@ -2,61 +2,79 @@
 using BlogApi.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlogApi.Controllers
+namespace BlogApi.Controllers;
+
+[Route("api/[controller]/articles")]
+[ApiController]
+public class BlogController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class BlogController : ControllerBase
+    public readonly IArticleService _service;
+    public BlogController(IArticleService service)
     {
-        public readonly IArticleService _service;
-        public BlogController(IArticleService service) 
-        { 
-            _service = service;
-        }
+        _service = service;
+    }
 
-        // *-- Create --* 
-        [HttpPost]
-        [Route("articles")]
-        public async Task<IActionResult> CreateAsync([FromBody] ArticleCreateRequest newArticle)
+    // *-- Create --* 
+    [HttpPost]
+    public async Task<IActionResult> CreateAsync([FromBody] ArticleCreateRequest newArticle)
+    {
+        var createdArticle = await _service.CreateArticleAsync(newArticle);
+
+        if (createdArticle == null)
         {
-            var createdArticle = await _service.CreateArticleAsync(newArticle);
-            return Ok(createdArticle);
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                detail: "Article creation failed.");
         }
 
-        // *-- Read --*
-        [HttpGet]
-        [Route("articles")]
-        public async Task<IActionResult> GetAsync()
+        return CreatedAtAction(nameof(GetById),
+            new { id = createdArticle.Id }, createdArticle);
+    }
+
+    // *-- Read --*
+    [HttpGet]
+    public async Task<IActionResult> GetAsync()
+    {
+        var articles = await _service.GetArticlesAsync();
+
+        if (articles == null)
         {
-            var articles = await _service.GetArticlesAsync();
-            return Ok(articles);
+            return Problem(
+                statusCode: StatusCodes.Status500InternalServerError,
+                detail: "An error occurred while retrieving articles.");
         }
 
-        [HttpGet]
-        [Route("articles/{id}")]
-        public async Task<IActionResult> GetById(int id)
+        return Ok(articles);
+    }
+
+    [HttpGet]
+    [Route("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var article = await _service.GetArticleByIdAsync(id);
+        if (article == null)
         {
-            var article = await _service.GetArticleByIdAsync(id);
-            return Ok(article);
+            return NotFound(id);
         }
 
+        return Ok(article);
+    }
 
-        // *-- Update --*
-        [HttpPut]
-        [Route("articles/{id}")]
-        public async Task<IActionResult> UpdateAsync(int id,[FromBody] ArticleUpdateRequest updatedArticle)
-        {
-            var result = await _service.UpdateArticleAsync(id, updatedArticle);
-            return Ok(result);
-        }
+    // *-- Update --*
+    [HttpPut]
+    [Route("{id}")]
+    public async Task<IActionResult> UpdateAsync(int id, [FromBody] ArticleUpdateRequest updatedArticle)
+    {
+        return await _service.UpdateArticleAsync(id, updatedArticle) 
+            ? NoContent() : BadRequest();
+    }
 
-        // *-- Delete --
-        [HttpDelete]
-        [Route("articles/{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
-        {
-            var result = await _service.DeleteArticleAsync(id);
-            return Ok(result);
-        }
+    // *-- Delete --*
+    [HttpDelete]
+    [Route("{id}")]
+    public async Task<IActionResult> DeleteAsync(int id)
+    {
+        return await _service.DeleteArticleAsync(id) 
+            ? NoContent() : BadRequest();
     }
 }
