@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApi", "BlogApi\BlogApi.csproj", "{18BBF066-602A-4AE5-AB26-19C96D5D40A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Api", "Blog.Api\Blog.Api.csproj", "{18BBF066-602A-4AE5-AB26-19C96D5D40A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlogApi.Tests", "BlogApi.Tests\BlogApi.Tests.csproj", "{4F9FE7B6-291E-4B44-A93C-991F363D5F41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.Api.Tests", "Blog.Api.Tests\Blog.Api.Tests.csproj", "{4F9FE7B6-291E-4B44-A93C-991F363D5F41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.DataAccess", "Blog.DataAccess\Blog.DataAccess.csproj", "{8EB3B344-4A8A-4443-B2B8-8D72FD53374B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blog.DataAccess.Tests", "Blog.DataAccess.Tests\Blog.DataAccess.Tests.csproj", "{6AF01AEC-F438-42A3-8762-A470FAF61110}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{4F9FE7B6-291E-4B44-A93C-991F363D5F41}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F9FE7B6-291E-4B44-A93C-991F363D5F41}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F9FE7B6-291E-4B44-A93C-991F363D5F41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EB3B344-4A8A-4443-B2B8-8D72FD53374B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EB3B344-4A8A-4443-B2B8-8D72FD53374B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EB3B344-4A8A-4443-B2B8-8D72FD53374B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EB3B344-4A8A-4443-B2B8-8D72FD53374B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AF01AEC-F438-42A3-8762-A470FAF61110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AF01AEC-F438-42A3-8762-A470FAF61110}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AF01AEC-F438-42A3-8762-A470FAF61110}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AF01AEC-F438-42A3-8762-A470FAF61110}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
