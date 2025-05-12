@@ -31,6 +31,15 @@ public class ArticleRepo : IArticleRepo
         return articles;
     }
 
+    public async Task<List<string>> GetAvailableTagsAsync()
+    {
+        return await _db.Articles
+            .Where(a => !string.IsNullOrWhiteSpace(a.Tags))
+            .Select(a => a.Tags)
+            .ToListAsync();
+    }
+
+
     public async Task<bool> UpdateAsync(int id, Article updatedArticle)
     {
         var existingArticle = await _db.Articles.FindAsync(id);

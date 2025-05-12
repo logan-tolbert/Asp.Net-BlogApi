@@ -33,6 +33,17 @@ namespace BlogApi.Services
             return result.Select(article => article.ToArticleResponse());
         }
 
+        public async Task<List<string>> GetAllTagsAsync()
+        {
+            var tagStrings = await _repo.GetAvailableTagsAsync();
+
+            return tagStrings
+                .SelectMany(t => t.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                .Select(t => t.Trim().ToLower())
+                .Distinct()
+                .ToList();
+        }
+
         // *-- Update --*
         public async Task<bool> UpdateArticleAsync(int id, ArticleUpdateRequest? request)
         {

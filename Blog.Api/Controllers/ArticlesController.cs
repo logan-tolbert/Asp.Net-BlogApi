@@ -27,7 +27,7 @@ public class ArticlesController : ControllerBase
                 detail: "Article creation failed.");
         }
 
-        return CreatedAtAction(nameof(GetById),
+        return CreatedAtAction(nameof(GetByIdAsync),
             new { id = createdArticle.Id }, createdArticle);
     }
 
@@ -49,7 +49,7 @@ public class ArticlesController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<IActionResult> GetById(int id)
+    public async Task<IActionResult> GetByIdAsync(int id)
     {
         var article = await _service.GetArticleByIdAsync(id);
         if (article == null)
@@ -59,6 +59,14 @@ public class ArticlesController : ControllerBase
 
         return Ok(article);
     }
+
+    [HttpGet("tags")]
+    public async Task<IActionResult> GetTagsAsync()
+    {
+        var tags = await _service.GetAllTagsAsync();
+        return Ok(tags);
+    }
+
 
     // *-- Update --*
     [HttpPut]

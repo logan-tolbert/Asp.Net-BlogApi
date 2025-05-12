@@ -7,6 +7,7 @@ namespace BlogApi.Services
         Task<ArticleResponse> CreateArticleAsync(ArticleCreateRequest? request);
         Task<ArticleResponse> GetArticleByIdAsync(int id);
         Task<IEnumerable<ArticleResponse>> GetArticlesAsync();
+        Task<List<string>> GetAllTagsAsync();
         Task<bool> UpdateArticleAsync(int id, ArticleUpdateRequest? request);
         Task<bool> DeleteArticleAsync(int id);
 
