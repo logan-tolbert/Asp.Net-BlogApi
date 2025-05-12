@@ -29,7 +29,7 @@ public class ArticleRepo : IArticleRepo
         return articles;
     }
 
-    public async Task<List<string>> GetAvailableTagsAsync()
+    public async Task<IEnumerable<string>> GetAvailableTagsAsync()
     {
         return await _db.Articles
             .Where(a => !string.IsNullOrWhiteSpace(a.Tags))

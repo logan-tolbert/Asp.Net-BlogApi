@@ -31,26 +31,22 @@ namespace BlogApi.Services
             var result = await _repo.GetAllAsync();
             return result.Select(article => article.ToArticleResponse());
         }
-        public async Task<List<string>> GetAllTagsAsync()
+        public async Task<IEnumerable<string>> GetAllTagsAsync()
         {
             var tagStrings = await _repo.GetAvailableTagsAsync();
 
             return tagStrings
-                .SelectMany(t => t.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                .Select(t => t.Trim().ToLower())
+                .SelectMany(ParseTags)
                 .Distinct()
                 .ToList();
         }
 
-        public async Task<List<ArticleResponse>> GetArticlesByTagAsync(string tag)
+        public async Task<IEnumerable<ArticleResponse>> GetArticlesByTagAsync(string tag)
         {
             var articles = await _repo.GetAllAsync(); 
             var filtered = articles
                 .Where(a => !string.IsNullOrEmpty(a.Tags))
-                .Where(a => a.Tags
-                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                    .Select(t => t.Trim().ToLower())
-                    .Contains(tag.ToLower()))
+                .Where(a => ParseTags(a.Tags).Contains(tag.ToLower()))
                 .ToList();
 
             return filtered.Select(a => a.ToArticleResponse()).ToList();
@@ -69,5 +65,14 @@ namespace BlogApi.Services
             var result = _repo.DeleteAsync(id);
             return result;
         }
+
+        private static List<string> ParseTags(string tagString)
+        {
+            return tagString
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(t => t.Trim().ToLower())
+                .ToList();
+        }
+
     }
 }
