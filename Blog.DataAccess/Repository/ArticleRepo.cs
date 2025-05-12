@@ -1,5 +1,4 @@
-﻿using DataAccess;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess.Repository;
@@ -12,7 +11,6 @@ public class ArticleRepo : IArticleRepo
     {
         _db = db;
     }
-
     public async Task<Article> CreateAsync(Article article)
     {
         _db.Articles.Add(article);
@@ -39,7 +37,6 @@ public class ArticleRepo : IArticleRepo
             .ToListAsync();
     }
 
-
     public async Task<bool> UpdateAsync(int id, Article updatedArticle)
     {
         var existingArticle = await _db.Articles.FindAsync(id);
@@ -57,7 +54,6 @@ public class ArticleRepo : IArticleRepo
         var rowsAffected = await _db.SaveChangesAsync();
         return rowsAffected > 0;
     }
-
 
     public async Task<bool> DeleteAsync(int id)   
     {

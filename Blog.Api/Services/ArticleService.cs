@@ -26,13 +26,11 @@ namespace BlogApi.Services
             return result!.ToArticleResponse();
         }
 
-        // Fixed: ArticleService => Implement GetArticlesAsync()
         public async Task<IEnumerable<ArticleResponse>> GetArticlesAsync()
         {
             var result = await _repo.GetAllAsync();
             return result.Select(article => article.ToArticleResponse());
         }
-
         public async Task<List<string>> GetAllTagsAsync()
         {
             var tagStrings = await _repo.GetAvailableTagsAsync();
@@ -42,6 +40,20 @@ namespace BlogApi.Services
                 .Select(t => t.Trim().ToLower())
                 .Distinct()
                 .ToList();
+        }
+
+        public async Task<List<ArticleResponse>> GetArticlesByTagAsync(string tag)
+        {
+            var articles = await _repo.GetAllAsync(); 
+            var filtered = articles
+                .Where(a => !string.IsNullOrEmpty(a.Tags))
+                .Where(a => a.Tags
+                    .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(t => t.Trim().ToLower())
+                    .Contains(tag.ToLower()))
+                .ToList();
+
+            return filtered.Select(a => a.ToArticleResponse()).ToList();
         }
 
         // *-- Update --*

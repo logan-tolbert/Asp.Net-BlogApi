@@ -33,9 +33,11 @@ public class ArticlesController : ControllerBase
 
     // *-- Read --*
     [HttpGet]
-    public async Task<IActionResult> GetAsync()
+    public async Task<IActionResult> GetAsync([FromQuery] string? tag)
     {
-        var articles = await _service.GetArticlesAsync();
+        var articles = string.IsNullOrWhiteSpace(tag)
+            ? await _service.GetArticlesAsync()
+            : await _service.GetArticlesByTagAsync(tag);
 
         if (articles == null)
         {
@@ -46,6 +48,7 @@ public class ArticlesController : ControllerBase
 
         return Ok(articles);
     }
+
 
     [HttpGet]
     [Route("{id}")]
