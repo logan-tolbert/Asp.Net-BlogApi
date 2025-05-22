@@ -365,3 +365,5 @@ MigrationBackup/
 FodyWeavers.xsd
 /BlogApi/DataAccess/Data/blog.db-shm
 /BlogApi/DataAccess/Data/blog.db-wal
+/.idea/.idea.BlogApi/.idea
+/.github/copilot-instructions.md
