@@ -1,24 +1,22 @@
-﻿using DataAccess.Entities;
-using DataAccess.Repository;
-using BlogApi.DTOs;
-using BlogApi.Services;
-using Moq;
+﻿using Blog.Api.DTOs;
 using Blog.Api.Services;
+using DataAccess.Entities;
+using DataAccess.Repository;
+using Moq;
 
-namespace BlogApi.Tests.UnitTests;
+namespace Blog.Api.Tests.UnitTests;
 
 public class ArticleServiceTests
 {
     // TODO: Testing - Reduce code duplication. Cleaner more efficient test data genearation
     private readonly IArticleService _service;
     private readonly Mock<IArticleRepo> _mock;
-    private readonly IArticleRepo _mockRepo;
 
     public ArticleServiceTests()
     {
         _mock = new Mock<IArticleRepo>();
-        _mockRepo = _mock.Object;
-        _service = new ArticleService(_mockRepo); 
+        var mockRepo = _mock.Object;
+        _service = new ArticleService(mockRepo); 
     }
 
     // *-- Create --*
