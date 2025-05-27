@@ -1,9 +1,9 @@
-﻿using DataAccess.Entities;
+﻿using BlogApi.Tests.TestHelpers;
+using DataAccess.Entities;
 using DataAccess.Repository;
-using BlogApi.Tests.TestHelpers;
 
-namespace BlogApi.Tests.IntegrationTests;
-public class IT_ArticleRepoTest
+namespace Blog.DataAccess.Tests.IntegrationTests;
+public class ItArticleRepoTest
 {
     // *-- Create --*
     [Fact]

@@ -23,7 +23,7 @@ public class ArticleService : IArticleService
     public async Task<ArticleResponse> GetArticleByIdAsync(int id)
     {
         var result = await _repo.GetByIdAsync(id);
-        return result!.ToArticleResponse();
+        return result.ToArticleResponse();
     }
 
     public async Task<IEnumerable<ArticleResponse>> GetArticlesAsync()

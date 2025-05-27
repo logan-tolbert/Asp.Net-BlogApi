@@ -1,16 +1,17 @@
-﻿using BlogApi.Tests.TestHelpers;
+﻿using System.Net;
 using System.Net.Http.Json;
+using BlogApi.Tests.TestHelpers;
 
-namespace BlogApi.Tests.IntegrationTests;
+namespace Blog.Api.Tests.IntegrationTests;
 
-public class IT_BlogControllerTests
+public class ItBlogControllerTests
     (CustomWebApplicationFactory<Program> factory) : IClassFixture<CustomWebApplicationFactory<Program>>
 {
     private readonly HttpClient _client = factory.CreateClient();
 
     // *-- Create --*
     [Fact]
-    public async Task CreateAsync_ReturnsOkResult()
+    public async Task CreateAsync_WithValidArticle_Returns201Created()
     {
         // Arrange
         var newArticle = new
@@ -22,39 +23,41 @@ public class IT_BlogControllerTests
         };
 
         // Act
-        var response = await _client.PostAsJsonAsync("api/blog/articles", newArticle);
-
+        var response = await _client.PostAsJsonAsync("api/v0/articles/", newArticle);
+        
         // Assert
-        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
+        Assert.True(response.StatusCode == HttpStatusCode.Created, "Expected a successful status code.");
         response.EnsureSuccessStatusCode();
     }
 
     // *-- Read --*
     [Fact]
-    public async Task GetByIdAsync_ReturnsOkResult()
+    public async Task GetByIdAsync_WithExistingId_Returns200OK()
     {
+        // Arrange
+        const int id = 1;
         // Act
-        var response = await _client.GetAsync("api/blog/articles/1");
+        var response = await _client.GetAsync($"api/v0/articles/{id}");
 
         // Assert
-        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
+        Assert.True(response.StatusCode == HttpStatusCode.OK, "Expected a successful status code.");
         response.EnsureSuccessStatusCode();
     }
 
     [Fact]
-    public async Task GetAsync_ReturnsOkResult()
+    public async Task GetAsync_WhenCalled_Returns200OK()
     {
         // Act
-        var response = await _client.GetAsync("api/blog/articles");
+        var response = await _client.GetAsync("api/v0/articles");
 
         // Assert
-        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
+        Assert.True(response.StatusCode == HttpStatusCode.OK, "Expected a successful status code.");
         response.EnsureSuccessStatusCode();
     }
 
     // *-- Update --
     [Fact]
-    public async Task UpdateAsync_ReturnsOkResult()
+    public async Task UpdateAsync_WithValidArticle_Returns204NoContent()
     {
         // Arrange
         var updatedArticle = new
@@ -67,25 +70,25 @@ public class IT_BlogControllerTests
         };
 
         // Act
-        var response = await _client.PutAsJsonAsync($"api/blog/articles/{updatedArticle.Id}", updatedArticle);
+        var response = await _client.PutAsJsonAsync($"api/v0/articles/{updatedArticle.Id}", updatedArticle);
 
         // Assert
-        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
+        Assert.True(response.StatusCode == HttpStatusCode.NoContent, "Expected a successful status code.");
         response.EnsureSuccessStatusCode();
     }
 
     // *-- Delete --
     [Fact]
-    public async Task DeleteAsync_ReturnsOkResult()
+    public async Task DeleteAsync_WithExistingId_Returns204NoContent()
     {
         // Arrange
         var id = 1;
 
         // Act
-        var response = await _client.DeleteAsync($"api/blog/articles/{id}");
+        var response = await _client.DeleteAsync($"api/v0/articles/{id}");
 
         // Assert
-        Assert.True(response.IsSuccessStatusCode, "Expected a successful status code.");
+        Assert.True(response.StatusCode == HttpStatusCode.NoContent, "Expected a successful status code.");
         response.EnsureSuccessStatusCode();
     }
 

@@ -27,8 +27,7 @@ public class ArticlesController : ControllerBase
                 detail: "Article creation failed.");
         }
 
-        return CreatedAtAction(nameof(GetByIdAsync),
-            new { id = createdArticle.Id }, createdArticle);
+        return Created($"api/v0/articles/{createdArticle.Id}", createdArticle);
     }
 
     // *-- Read --*
@@ -51,7 +50,7 @@ public class ArticlesController : ControllerBase
 
 
     [HttpGet]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<IActionResult> GetByIdAsync(int id)
     {
         var article = await _service.GetArticleByIdAsync(id);

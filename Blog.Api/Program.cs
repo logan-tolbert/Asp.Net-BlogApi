@@ -1,14 +1,26 @@
+using Blog.Api.Exceptions;
 using Blog.Api.Services;
 using DataAccess;
 using DataAccess.Repository;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.AspNetCore.Http.Features;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddProblemDetails();
+
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = context =>
+    {
+        context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method}:{context.HttpContext.Request.Path}";
+        context.ProblemDetails.Extensions.Add("requestId", context.HttpContext.TraceIdentifier);
+        var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+        context.ProblemDetails.Extensions.Add("traceId", activity?.Id);
+    };
+});
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -25,16 +37,16 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAllOrigins",
-        builder => builder.AllowAnyOrigin()
+        corsPolicyBuilder => corsPolicyBuilder.AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader());
-    options.AddPolicy("FrontendClientPolicy", builder =>
+    options.AddPolicy("FrontendClientPolicy", corsPolicyBuilder =>
     {
-        builder.WithOrigins("https://yourfrontend.com")
-               .WithMethods("GET", "POST", "PUT", "DELETE")
-               .WithHeaders("Content-Type", "Authorization");
+        corsPolicyBuilder.WithOrigins("https://yourfrontend.com")
+            .WithMethods("GET", "POST", "PUT", "DELETE")
+            .WithHeaders("Content-Type", "Authorization");
     });
-}); 
+});
 
 builder.Services.AddDbContext<BlogDbContext>();
 
@@ -45,7 +57,7 @@ var app = builder.Build();
 
 if (app.Environment.IsProduction())
 {
-    app.UseExceptionHandler("/error");
+    app.UseExceptionHandler();
     app.UseHsts();
     app.UseHttpsRedirection();
 }
@@ -56,38 +68,11 @@ else
 
 app.UseRouting();
 
-if (app.Environment.IsProduction())
-{
-    app.UseCors("FrontendClientPolicy");
-}
-else
-{
-    app.UseCors("AllowAllOrigins");
-}
+app.UseCors(app.Environment.IsProduction() ? "FrontendClientPolicy" : "AllowAllOrigins");
 
 app.UseAuthorization();
 
-app.UseStatusCodePages(async statusCodeContext =>
-{
-    var problemDetailsService = statusCodeContext.HttpContext.RequestServices.GetRequiredService<IProblemDetailsService>();
-    var httpContext = statusCodeContext.HttpContext;
-    var request = httpContext.Request;
-    var response = httpContext.Response;
-
-    if (!response.HasStarted && response.StatusCode >= 400)
-    {
-        await problemDetailsService.WriteAsync(new ProblemDetailsContext
-        {
-            HttpContext = httpContext,
-            ProblemDetails = new ProblemDetails
-            {
-                Status = response.StatusCode,
-                Title = ReasonPhrases.GetReasonPhrase(response.StatusCode),
-                Instance = request.Path
-            }
-        });
-    }
-});
+app.UseStatusCodePages();
 
 if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("EnableScalarDocs"))
 {
@@ -103,7 +88,7 @@ if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("EnableS
         options.Favicon = "/favicon.svg";
         options.Layout = ScalarLayout.Modern;
         options.DarkMode = true;
-        options.CustomCss = "* { font-family: 'Monaco'; }";
+        options.CustomCss = "* { font-family: 'Monaco', sans-serif; }";
         options.WithDefaultHttpClient(ScalarTarget.CSharp, ScalarClient.HttpClient);
         options.WithDefaultHttpClient(ScalarTarget.JavaScript, ScalarClient.Fetch);
         options.WithDefaultHttpClient(ScalarTarget.Python, ScalarClient.Requests);
