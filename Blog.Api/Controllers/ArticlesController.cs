@@ -9,6 +9,7 @@ namespace Blog.Api.Controllers;
 public class ArticlesController : ControllerBase
 {
     public readonly IArticleService _service;
+
     public ArticlesController(IArticleService service)
     {
         _service = service;
@@ -32,22 +33,27 @@ public class ArticlesController : ControllerBase
 
     // *-- Read --*
     [HttpGet]
-    public async Task<IActionResult> GetAsync([FromQuery] string? tag)
+    public async Task<IActionResult> GetAsync(
+        [FromQuery] string? tag,
+        [FromQuery] int page = 1,
+        [FromQuery] int pageSize = 10)
     {
-        var articles = string.IsNullOrWhiteSpace(tag)
-            ? await _service.GetArticlesAsync()
-            : await _service.GetArticlesByTagAsync(tag);
-
-        if (articles == null)
+        if (string.IsNullOrWhiteSpace(tag))
         {
-            return Problem(
-                statusCode: StatusCodes.Status500InternalServerError,
-                detail: "An error occurred while retrieving articles.");
+           
+            var pagedArticles = await _service.GetArticlesPaginatedAsync(page, pageSize);
+            return Ok(pagedArticles);
         }
+        else
+        {
 
-        return Ok(articles);
+            var articles = await _service.GetArticlesByTagAsync(tag);
+            var pagedArticles = articles
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+            return Ok(pagedArticles);
+        }
     }
-
 
     [HttpGet]
     [Route("{id:int}")]
@@ -69,13 +75,12 @@ public class ArticlesController : ControllerBase
         return Ok(tags);
     }
 
-
     // *-- Update --*
     [HttpPut]
     [Route("{id}")]
     public async Task<IActionResult> UpdateAsync(int id, [FromBody] ArticleUpdateRequest updatedArticle)
     {
-        return await _service.UpdateArticleAsync(id, updatedArticle) 
+        return await _service.UpdateArticleAsync(id, updatedArticle)
             ? NoContent() : BadRequest();
     }
 
@@ -84,7 +89,7 @@ public class ArticlesController : ControllerBase
     [Route("{id}")]
     public async Task<IActionResult> DeleteAsync(int id)
     {
-        return await _service.DeleteArticleAsync(id) 
+        return await _service.DeleteArticleAsync(id)
             ? NoContent() : BadRequest();
     }
 }

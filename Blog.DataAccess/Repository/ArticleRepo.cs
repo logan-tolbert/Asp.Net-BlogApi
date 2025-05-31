@@ -28,7 +28,13 @@ public class ArticleRepo : IArticleRepo
         var articles = await _db.Articles.ToListAsync();
         return articles;
     }
-
+    public async Task<IEnumerable<Article>> GetAllPaginatedAsync(int page, int pageSize)
+    {
+        return await _db.Articles
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
     public async Task<IEnumerable<string>> GetAvailableTagsAsync()
     {
         return await _db.Articles

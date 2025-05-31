@@ -25,10 +25,16 @@ public class ArticleService : IArticleService
         var result = await _repo.GetByIdAsync(id);
         return result.ToArticleResponse();
     }
-
+    
     public async Task<IEnumerable<ArticleResponse>> GetArticlesAsync()
     {
         var result = await _repo.GetAllAsync();
+        return result.Select(article => article.ToArticleResponse());
+    }
+
+    public async Task<IEnumerable<ArticleResponse>> GetArticlesPaginatedAsync(int page, int pageSize)
+    {
+        var result = await _repo.GetAllPaginatedAsync(page, pageSize);
         return result.Select(article => article.ToArticleResponse());
     }
 
@@ -67,6 +73,7 @@ public class ArticleService : IArticleService
         return result;
     }
 
+    // TODO: Refactor move to a utility class or extension method
     private static List<string> ParseTags(string tagString)
     {
         return tagString
@@ -74,5 +81,4 @@ public class ArticleService : IArticleService
             .Select(t => t.Trim().ToLower())
             .ToList();
     }
-
 }
