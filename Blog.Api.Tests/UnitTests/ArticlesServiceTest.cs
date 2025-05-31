@@ -1,7 +1,7 @@
 ﻿using Blog.Api.DTOs;
 using Blog.Api.Services;
+using Blog.DataAccess.Repository;
 using DataAccess.Entities;
-using DataAccess.Repository;
 using Moq;
 
 namespace Blog.Api.Tests.UnitTests;

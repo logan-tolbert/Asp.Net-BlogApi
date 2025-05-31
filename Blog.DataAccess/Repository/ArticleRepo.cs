@@ -1,7 +1,8 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess;
+using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataAccess.Repository;
+namespace Blog.DataAccess.Repository;
 
 public class ArticleRepo : IArticleRepo
 {
@@ -28,13 +29,31 @@ public class ArticleRepo : IArticleRepo
         var articles = await _db.Articles.ToListAsync();
         return articles;
     }
-    public async Task<IEnumerable<Article>> GetAllPaginatedAsync(int page, int pageSize)
+
+    public async Task<IEnumerable<Article>> GetFilteredAndPaginatedAsync(
+     string tag, DateTime? startDate, DateTime? endDate, int page, int pageSize)
     {
-        return await _db.Articles
+        IQueryable<Article> query = _db.Articles;
+
+        if (!string.IsNullOrWhiteSpace(tag))
+        {
+            query = query.Where(a => a.Tags.ToLower().Contains(tag.ToLower()));
+        }
+        if (startDate.HasValue)
+        {
+            query = query.Where(a => a.CreatedAt >= startDate.Value);
+        }
+        if (endDate.HasValue)
+        {
+            query = query.Where(a => a.CreatedAt <= endDate.Value);
+        }
+
+        return await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
     }
+
     public async Task<IEnumerable<string>> GetAvailableTagsAsync()
     {
         return await _db.Articles

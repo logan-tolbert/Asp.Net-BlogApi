@@ -1,7 +1,7 @@
 using Blog.Api.Exceptions;
 using Blog.Api.Services;
+using Blog.DataAccess.Repository;
 using DataAccess;
-using DataAccess.Repository;
 using Microsoft.AspNetCore.Http.Features;
 using Scalar.AspNetCore;
 

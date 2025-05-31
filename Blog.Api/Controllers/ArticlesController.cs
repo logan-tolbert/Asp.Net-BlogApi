@@ -15,19 +15,17 @@ public class ArticlesController : ControllerBase
         _service = service;
     }
 
-    // *-- Create --* 
+    // *-- Create --*
     [HttpPost]
     public async Task<IActionResult> CreateAsync([FromBody] ArticleCreateRequest newArticle)
     {
         var createdArticle = await _service.CreateArticleAsync(newArticle);
-
         if (createdArticle == null)
         {
             return Problem(
                 statusCode: StatusCodes.Status500InternalServerError,
                 detail: "Article creation failed.");
         }
-
         return Created($"api/v0/articles/{createdArticle.Id}", createdArticle);
     }
 
@@ -35,24 +33,15 @@ public class ArticlesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAsync(
         [FromQuery] string? tag,
+        [FromQuery] DateTime? startDate,
+        [FromQuery] DateTime? endDate,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
     {
-        if (string.IsNullOrWhiteSpace(tag))
-        {
-           
-            var pagedArticles = await _service.GetArticlesPaginatedAsync(page, pageSize);
-            return Ok(pagedArticles);
-        }
-        else
-        {
-
-            var articles = await _service.GetArticlesByTagAsync(tag);
-            var pagedArticles = articles
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize);
-            return Ok(pagedArticles);
-        }
+        var effectiveTag = string.IsNullOrWhiteSpace(tag) ? string.Empty : tag;
+      
+        var articles = await _service.GetArticlesFilteredAndPaginatedAsync(effectiveTag, startDate, endDate, page, pageSize);
+        return Ok(articles);
     }
 
     [HttpGet]
@@ -64,7 +53,6 @@ public class ArticlesController : ControllerBase
         {
             return NotFound(id);
         }
-
         return Ok(article);
     }
 
