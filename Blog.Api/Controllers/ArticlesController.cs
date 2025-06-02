@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Api.Controllers;
 
-[Route("api/v0/[controller]")]
 [ApiController]
 public class ArticlesController : ControllerBase
 {
@@ -19,6 +18,7 @@ public class ArticlesController : ControllerBase
 
     // *-- Create --*
     [HttpPost]
+    [Route(Endpoints.Articles.Post)]
     public async Task<IActionResult> PostAsync([FromBody] ArticleCreateRequest newArticle)
     {
         var createdArticle = await _service.CreateArticleAsync(newArticle);
@@ -26,11 +26,12 @@ public class ArticlesController : ControllerBase
         {
             return this.ArticleCreationFailed();
         }
-        return Created($"api/v0/articles/{createdArticle.Id}", createdArticle);
+        return Created($"{Endpoints.Articles.Post}/{createdArticle.Id}", createdArticle);
     }
 
     // *-- Read --*
     [HttpGet]
+    [Route(Endpoints.Articles.GetAll)]
     public async Task<IActionResult> GetAllAsync(
         [FromQuery] string? tag,
         [FromQuery] DateTime? startDate,
@@ -45,7 +46,7 @@ public class ArticlesController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id:int}")]
+    [Route(Endpoints.Articles.Get)]
     public async Task<IActionResult> GetAsync(int id)
     {
         var article = await _service.GetArticleByIdAsync(id);
@@ -57,7 +58,8 @@ public class ArticlesController : ControllerBase
         return Ok(article);
     }
 
-    [HttpGet("tags")]
+    [HttpGet]
+    [Route(Endpoints.Articles.GetTags)]
     public async Task<IActionResult> GetTagsAsync()
     {
         var tags = await _service.GetAllTagsAsync();
@@ -66,7 +68,7 @@ public class ArticlesController : ControllerBase
 
     // *-- Update --*
     [HttpPut]
-    [Route("{id}")]
+    [Route(Endpoints.Articles.Put)]
     public async Task<IActionResult> PutAsync(int id, [FromBody] ArticleUpdateRequest updatedArticle)
     {
         return await _service.UpdateArticleAsync(id, updatedArticle)
@@ -75,7 +77,7 @@ public class ArticlesController : ControllerBase
 
     // *-- Delete --*
     [HttpDelete]
-    [Route("{id}")]
+    [Route(Endpoints.Articles.Delete)]
     public async Task<IActionResult> DeleteAsync(int id)
     {
         return await _service.DeleteArticleAsync(id)
