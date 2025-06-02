@@ -22,7 +22,7 @@ public class ArticlesController : ControllerBase
     public async Task<IActionResult> PostAsync([FromBody] ArticleCreateRequest newArticle)
     {
         var createdArticle = await _service.CreateArticleAsync(newArticle);
-        if (createdArticle == null)
+        if (createdArticle is null)
         {
             return this.ArticleCreationFailed();
         }
@@ -32,6 +32,7 @@ public class ArticlesController : ControllerBase
     // *-- Read --*
     [HttpGet]
     [Route(Endpoints.Articles.GetAll)]
+    //TODO: Implement DTO for query parameters to encapsulate filtering and pagination logic
     public async Task<IActionResult> GetAllAsync(
         [FromQuery] string? tag,
         [FromQuery] DateTime? startDate,
@@ -47,13 +48,12 @@ public class ArticlesController : ControllerBase
 
     [HttpGet]
     [Route(Endpoints.Articles.Get)]
-    public async Task<IActionResult> GetAsync(int id)
+    public async Task<IActionResult> GetAsync([FromRoute]int id)
     {
         var article = await _service.GetArticleByIdAsync(id);
-        if (article == null)
+        if (article is null)
         {
             return this.ArticleNotFound();
-
         }
         return Ok(article);
     }
@@ -78,7 +78,7 @@ public class ArticlesController : ControllerBase
     // *-- Delete --*
     [HttpDelete]
     [Route(Endpoints.Articles.Delete)]
-    public async Task<IActionResult> DeleteAsync(int id)
+    public async Task<IActionResult> DeleteAsync([FromRoute]int id)
     {
         return await _service.DeleteArticleAsync(id)
             ? NoContent() : this.ArticleNotFound();
