@@ -12,7 +12,7 @@ public static class Endpoints
         public const string Get = $"{Base}/{{id:int}}";
         public const string GetAll = Base;
         public const string GetTags = $"{Base}/tags";
-        public const string Put = Base;
+        public const string Put = $"{Base}/{{id:int}}";
         public const string Delete = $"{Base}/{{id:int}}";
     }
 }

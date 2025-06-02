@@ -69,7 +69,7 @@ public class ArticlesController : ControllerBase
     // *-- Update --*
     [HttpPut]
     [Route(Endpoints.Articles.Put)]
-    public async Task<IActionResult> PutAsync(int id, [FromBody] ArticleUpdateRequest updatedArticle)
+    public async Task<IActionResult> PutAsync([FromRoute] int id, [FromBody] ArticleUpdateRequest updatedArticle)
     {
         return await _service.UpdateArticleAsync(id, updatedArticle)
             ? NoContent() : this.ArticleNotFound();
