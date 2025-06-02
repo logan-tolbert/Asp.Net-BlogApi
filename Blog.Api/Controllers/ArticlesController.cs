@@ -1,4 +1,6 @@
 ﻿using Blog.Api.DTOs;
+using Blog.Api.Exceptions;
+using Blog.Api.Extensions;
 using Blog.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,21 +19,19 @@ public class ArticlesController : ControllerBase
 
     // *-- Create --*
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] ArticleCreateRequest newArticle)
+    public async Task<IActionResult> PostAsync([FromBody] ArticleCreateRequest newArticle)
     {
         var createdArticle = await _service.CreateArticleAsync(newArticle);
         if (createdArticle == null)
         {
-            return Problem(
-                statusCode: StatusCodes.Status500InternalServerError,
-                detail: "Article creation failed.");
+            return this.ArticleCreationFailed();
         }
         return Created($"api/v0/articles/{createdArticle.Id}", createdArticle);
     }
 
     // *-- Read --*
     [HttpGet]
-    public async Task<IActionResult> GetAsync(
+    public async Task<IActionResult> GetAllAsync(
         [FromQuery] string? tag,
         [FromQuery] DateTime? startDate,
         [FromQuery] DateTime? endDate,
@@ -46,12 +46,13 @@ public class ArticlesController : ControllerBase
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<IActionResult> GetByIdAsync(int id)
+    public async Task<IActionResult> GetAsync(int id)
     {
         var article = await _service.GetArticleByIdAsync(id);
         if (article == null)
         {
-            return NotFound(id);
+            return this.ArticleNotFound();
+
         }
         return Ok(article);
     }
@@ -66,10 +67,10 @@ public class ArticlesController : ControllerBase
     // *-- Update --*
     [HttpPut]
     [Route("{id}")]
-    public async Task<IActionResult> UpdateAsync(int id, [FromBody] ArticleUpdateRequest updatedArticle)
+    public async Task<IActionResult> PutAsync(int id, [FromBody] ArticleUpdateRequest updatedArticle)
     {
         return await _service.UpdateArticleAsync(id, updatedArticle)
-            ? NoContent() : BadRequest();
+            ? NoContent() : this.ArticleNotFound();
     }
 
     // *-- Delete --*
@@ -78,6 +79,6 @@ public class ArticlesController : ControllerBase
     public async Task<IActionResult> DeleteAsync(int id)
     {
         return await _service.DeleteArticleAsync(id)
-            ? NoContent() : BadRequest();
+            ? NoContent() : this.ArticleNotFound();
     }
 }

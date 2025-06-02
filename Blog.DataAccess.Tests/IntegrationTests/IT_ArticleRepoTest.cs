@@ -1,6 +1,6 @@
-﻿using BlogApi.Tests.TestHelpers;
+﻿using Blog.DataAccess.Repository;
+using BlogApi.Tests.TestHelpers;
 using DataAccess.Entities;
-using DataAccess.Repository;
 
 namespace Blog.DataAccess.Tests.IntegrationTests;
 public class ItArticleRepoTest

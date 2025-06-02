@@ -23,9 +23,12 @@ internal sealed class GlobalExceptionHandler(IProblemDetailsService problemDetai
     {
         httpContext.Response.StatusCode = exception switch
         {
+            NotFoundException _ => StatusCodes.Status404NotFound,
+            ValidationException _ => StatusCodes.Status422UnprocessableEntity,
             ApplicationException _ => StatusCodes.Status400BadRequest,
             _ => StatusCodes.Status500InternalServerError
         };
+
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {
             HttpContext = httpContext,
