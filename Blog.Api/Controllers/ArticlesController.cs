@@ -1,5 +1,4 @@
 ﻿using Blog.Api.DTOs;
-using Blog.Api.Exceptions;
 using Blog.Api.Extensions;
 using Blog.Api.Services;
 using Microsoft.AspNetCore.Mvc;

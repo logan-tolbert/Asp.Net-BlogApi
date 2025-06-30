@@ -16,7 +16,10 @@ builder.Services.AddProblemDetails(options =>
         context.ProblemDetails.Instance = $"{context.HttpContext.Request.Method}:{context.HttpContext.Request.Path}";
         context.ProblemDetails.Extensions.Add("requestId", context.HttpContext.TraceIdentifier);
         var activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
-        context.ProblemDetails.Extensions.Add("traceId", activity?.Id);
+        if (!context.ProblemDetails.Extensions.ContainsKey("traceId"))
+        {
+            context.ProblemDetails.Extensions.Add("traceId", activity?.Id);
+        }
     };
 });
 

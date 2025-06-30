@@ -16,8 +16,8 @@ public static class ProblemDetailsExtensions
     public static IActionResult ArticleCreationFailed(this ControllerBase controller)
     {
         return controller.Problem(
-            statusCode: StatusCodes.Status500InternalServerError,
-            title: "500 Internal Server Error",
+            statusCode: StatusCodes.Status400BadRequest,
+            title: "400 Bad Request",
             detail: "Article creation failed.");
     }
 
